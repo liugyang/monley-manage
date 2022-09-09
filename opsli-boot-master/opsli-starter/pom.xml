@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>opsli-boot-parent</artifactId>
+        <groupId>org.opsliframework.boot</groupId>
+        <version>1.0.0</version>
+    </parent>
+
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>opsli-starter</artifactId>
+    <version>1.6.2</version>
+
+
+    <dependencies>
+        <!-- 需要使用着两个版本 来引入对应的模块和插件 -->
+        <!-- 基础版本 ${base.version} -->
+        <!-- 插件版本 ${plugins.version} -->
+        <!-- 模块版本 ${modulars.version}-->
+
+        <!-- 引入公用模块 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-common</artifactId>
+            <version>${base.version}</version>
+        </dependency>
+
+        <!-- 引入核心模块 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-core</artifactId>
+            <version>${base.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>aliyun-java-sdk-core</artifactId>
+                    <groupId>com.aliyun</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>asm</artifactId>
+                    <groupId>org.ow2.asm</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>guava</artifactId>
+                    <groupId>com.google.guava</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jsqlparser</artifactId>
+                    <groupId>com.github.jsqlparser</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mybatis</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mybatis-spring</artifactId>
+                    <groupId>org.mybatis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+        <!-- ———————————————————— 模块 - 开始 ———————————————————— -->
+        <!-- 系统模块 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-modulars-system</artifactId>
+            <version>${modulars.version}</version>
+        </dependency>
+        <!-- 代码生成器 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-modulars-generator</artifactId>
+            <version>${modulars.version}</version>
+        </dependency>
+        <!-- 引入测试业务模块 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-modulars-test</artifactId>
+            <version>${modulars.version}</version>
+        </dependency>
+        <!-- ———————————————————— 模块 - 结束 ———————————————————— -->
+
+
+
+        <!-- ———————————————————— 工具类 - 开始 ———————————————————— -->
+
+        <!-- ———————————————————— 工具类 - 结束 ———————————————————— -->
+    </dependencies>
+
+    <!-- 编译环境 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

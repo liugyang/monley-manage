@@ -1,0 +1,21 @@
+version: '3.3'
+services:
+  opsli-boot:
+    build: ./
+    restart: on-failure
+    container_name: opsli-boot
+    image: opsli-boot
+    environment:
+      TZ: Asia/Shanghai
+      LANG: en_US.UTF-8
+    command:
+      - -Xmx2048m
+      - -Xms2048m
+      - -XX:+UseG1GC
+      - -XX:MaxGCPauseMillis=200
+      - --spring.profiles.active=test
+    privileged: true
+    volumes:
+      - /www/wwwroot/demo.opsli.bedebug.com/backend/logs:/usr/local/opsli/opsli-boot/logs #挂载目录
+    ports:
+      - "7000:7000"

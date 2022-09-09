@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>opsli-base-support</artifactId>
+        <groupId>org.opsliframework.boot</groupId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>opsli-core</artifactId>
+    <version>${project.parent.version}</version>
+
+    <dependencies>
+        <!-- 需要使用着两个版本 来引入对应的模块和插件 -->
+        <!-- 基础版本 ${base.version} -->
+        <!-- 插件版本 ${plugins.version} -->
+        <!-- 模块版本 ${modulars.version}-->
+
+        <!-- 引入公用模块 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-common</artifactId>
+            <version>${base.version}</version>
+        </dependency>
+
+        <!-- 引入API模块 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-api</artifactId>
+            <version>${api.version}</version>
+        </dependency>
+
+        <!-- 引入加解密插件 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-plugins-crypto</artifactId>
+            <version>${plugins.version}</version>
+        </dependency>
+
+        <!-- 引入邮件插件 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-plugins-email</artifactId>
+            <version>${plugins.version}</version>
+        </dependency>
+
+        <!-- 引入短信插件 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-plugins-sms</artifactId>
+            <version>${plugins.version}</version>
+        </dependency>
+
+        <!-- 引入Redis插件 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-plugins-redis</artifactId>
+            <version>${plugins.version}</version>
+        </dependency>
+
+        <!-- 引入Security插件 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-plugins-security</artifactId>
+            <version>${plugins.version}</version>
+        </dependency>
+
+        <!-- 引入Redisson插件 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-plugins-redisson</artifactId>
+            <version>${plugins.version}</version>
+        </dependency>
+
+        <!-- 引入EhCache插件 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-plugins-ehcache</artifactId>
+            <version>${plugins.version}</version>
+        </dependency>
+
+        <!-- 引入软防火墙插件 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-plugins-waf</artifactId>
+            <version>${plugins.version}</version>
+        </dependency>
+
+        <!-- ———————————————————— 集成Shiro鉴权安全认证 - 开始 ———————————————————— -->
+
+        <!-- captcha 验证码 -->
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+        </dependency>
+
+        <!-- JWT 认证 -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jfinal</groupId>
+            <artifactId>enjoy</artifactId>
+        </dependency>
+
+        <!-- ———————————————————— 集成Shiro鉴权安全认证 - 结束 ———————————————————— -->
+
+        <!-- ———————————————————— 集成数据库相关配置 - 开始 ———————————————————— -->
+        <!-- mybatis-plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+
+        <!-- page-helper 分页 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- druid -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 动态数据源 -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!--mysql-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <!-- 修复 CVE-2021-22569  -->
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- 修复 CVE-2021-22569  -->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+        </dependency>
+
+        <!--  sqlserver-->
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc4</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- oracle驱动 -->
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- postgresql驱动 -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+            <version>${postgresql.version}</version>
+        </dependency>
+
+        <!-- ———————————————————— 集成数据库相关配置 - 结束 ———————————————————— -->
+
+        <!-- ———————————————————— OSHI 系统监控 - 开始 ———————————————————— -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+        </dependency>
+        <!-- ———————————————————— OSHI 系统监控 - 结束 ———————————————————— -->
+    </dependencies>
+
+</project>

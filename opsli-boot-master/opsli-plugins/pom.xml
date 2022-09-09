@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.opsliframework.boot</groupId>
+        <artifactId>opsli-boot-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>opsli-plugins</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <!-- 插件 -->
+    <modules>
+        <module>opsli-plugins-redis</module>
+        <module>opsli-plugins-ehcache</module>
+        <module>opsli-plugins-excel</module>
+        <module>opsli-plugins-redisson</module>
+        <module>opsli-plugins-waf</module>
+        <module>opsli-plugins-crypto</module>
+        <module>opsli-plugins-email</module>
+        <module>opsli-plugins-sms</module>
+        <module>opsli-plugins-security</module>
+    </modules>
+
+    <dependencyManagement>
+        <!-- 需要使用着两个版本 来引入对应的模块和插件 -->
+        <!-- 基础版本 ${base.version} -->
+        <!-- 插件版本 ${plugins.version} -->
+        <!-- 模块版本 ${modulars.version}-->
+
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- 需要使用着两个版本 来引入对应的模块和插件 -->
+        <!-- 基础版本 ${core.version} -->
+        <!-- 插件版本 ${plugins.version} -->
+        <!-- 模块版本 ${modulars.version}-->
+
+        <!-- 引入公共模块 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-common</artifactId>
+            <version>${base.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

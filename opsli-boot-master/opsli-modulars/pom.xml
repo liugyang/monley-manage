@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.opsliframework.boot</groupId>
+        <artifactId>opsli-boot-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>opsli-modulars</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <!-- 模块 -->
+    <modules>
+        <module>opsli-modulars-test</module>
+        <module>opsli-modulars-system</module>
+        <module>opsli-modulars-generator</module>
+    </modules>
+
+    <!-- 规定子类所引用的版本***** -->
+    <dependencyManagement>
+        <!-- 需要使用着两个版本 来引入对应的模块和插件 -->
+        <!-- 基础版本 ${base.version} -->
+        <!-- 插件版本 ${plugins.version} -->
+        <!-- 模块版本 ${modulars.version}-->
+
+        <dependencies>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- 需要使用着两个版本 来引入对应的模块和插件 -->
+        <!-- 基础版本 ${base.version} -->
+        <!-- 插件版本 ${plugins.version} -->
+        <!-- 模块版本 ${modulars.version}-->
+
+        <!-- 引入核心模块 -->
+        <dependency>
+            <groupId>org.opsliframework.boot</groupId>
+            <artifactId>opsli-core</artifactId>
+            <version>${base.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
