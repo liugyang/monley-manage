@@ -236,8 +236,8 @@ import {isNull, isEmail, isMobile, getMsg} from "@/utils/valiargs";
   import { validatorRule } from "@/utils/validateRlue";
   import { captcha } from "@/api/user";
 
-  // TODO 演示专用 开发记得删除
-  import LoginTips from "./components/LoginTips";
+  // // TODO 演示专用 开发记得删除
+  // import LoginTips from "./components/LoginTips";
 
   export default {
     name: "Login",
@@ -248,7 +248,7 @@ import {isNull, isEmail, isMobile, getMsg} from "@/utils/valiargs";
         },
       },
     },
-    components: { LoginTips },
+    // components: { LoginTips },
     data() {
 
       return {

@@ -17,7 +17,7 @@ module.exports = {
   baseURL:
     process.env.NODE_ENV === "development"
       ? "http://127.0.0.1:7000/opsli-boot"
-      : "http://demo.opsli.arcinbj.com:7000/opsli-boot",
+      : "/opsli-boot",
   //标题 （包括初次加载雪花屏的标题 页面的标题 浏览器的标题）
   title: "OPSLI 快速开发平台",
   //简写
@@ -67,7 +67,7 @@ module.exports = {
   //消息框消失时间
   messageDuration: 3000,
   //最长请求时间 可能会有导入 会有较长时间损耗 这里暂时设定失效时间为20秒
-  requestTimeout: 5000,
+  requestTimeout: 50000,
   //操作正常code，支持String、Array、int多种类型
   successCode: [200, 0],
   //登录失效code

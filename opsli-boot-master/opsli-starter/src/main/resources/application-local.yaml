@@ -18,7 +18,7 @@ spring:
     druid:
       stat-view-servlet:
         # 数据库监控开关
-        enabled: false
+        enabled: true
         # 登录用户名/密码
         login-username: admin
         login-password: 123456
@@ -33,7 +33,7 @@ spring:
       #primary: master
       datasource:
         master:
-          url: jdbc:mysql://10.237.103.237:3306/opsli-boot?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://127.0.0.1:3306/quant?characterEncoding=UTF-8&useUnicode=true&useSSL=false&tinyInt1isBit=false&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
           username: root
           password: root
           driver-class-name: com.mysql.cj.jdbc.Driver
