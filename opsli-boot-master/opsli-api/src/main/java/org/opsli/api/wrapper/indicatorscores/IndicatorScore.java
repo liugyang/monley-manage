@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.opsli.api.base.warpper.ApiWrapper;
 import org.opsli.common.annotation.validator.Validator;
 import org.opsli.common.annotation.validator.ValidatorLenMax;
 import org.opsli.common.enums.ValidatorType;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class IndicatorScore {
+public class IndicatorScore extends ApiWrapper {
 
     /** 选股ID */
     @ApiModelProperty(value = "选股ID")
@@ -61,4 +62,39 @@ public class IndicatorScore {
     })
     @ValidatorLenMax(19)
     private Long totalScores;
+
+    /** 指标ID */
+    @ApiModelProperty(value = "指标ID")
+    @ExcelProperty(value = "指标ID", order = 2)
+    @ExcelInfo
+    @Validator({
+            ValidatorType.IS_NOT_NULL,
+            ValidatorType.IS_INTEGER
+    })
+    @ValidatorLenMax(19)
+    private Long indicatorId;
+
+    /** 时间计数 */
+    @ApiModelProperty(value = "时间计数")
+    @ExcelProperty(value = "时间计数", order = 4)
+    @ExcelInfo
+    @ValidatorLenMax(19)
+    private Long dateCount;
+
+    /** 值 */
+    @ApiModelProperty(value = "值")
+    @ExcelProperty(value = "值", order = 5)
+    @ExcelInfo
+    @Validator({
+            ValidatorType.IS_NOT_NULL
+    })
+    @ValidatorLenMax(20)
+    private BigDecimal value;
+
+    /** 说明 */
+    @ApiModelProperty(value = "说明")
+    @ExcelProperty(value = "说明", order = 6)
+    @ExcelInfo
+    @ValidatorLenMax(40)
+    private String note;
 }

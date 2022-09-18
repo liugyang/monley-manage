@@ -20,19 +20,19 @@
     <!-- 主要操作  -->
     <vab-query-form>
       <vab-query-form-left-panel :span="10">
-        <el-button
-            v-if="$perms('indicatorscores_insert')"
-            icon="el-icon-plus"
-            type="primary"
-            @click="handleInsert"
-        > 添加 </el-button>
+<!--        <el-button-->
+<!--            v-if="$perms('indicatorscores_insert')"-->
+<!--            icon="el-icon-plus"-->
+<!--            type="primary"-->
+<!--            @click="handleInsert"-->
+<!--        > 添加 </el-button>-->
 
-        <el-button
-            v-if="$perms('indicatorscores_import')"
-            icon="el-icon-upload2"
-            type="warning"
-            @click="handleImportExcel"
-        > 导入 </el-button>
+<!--        <el-button-->
+<!--            v-if="$perms('indicatorscores_import')"-->
+<!--            icon="el-icon-upload2"-->
+<!--            type="warning"-->
+<!--            @click="handleImportExcel"-->
+<!--        > 导入 </el-button>-->
 
         <el-button
             v-if="$perms('indicatorscores_export')"
@@ -41,13 +41,13 @@
             @click="handleExportExcel"
         > 导出 </el-button>
 
-        <el-button
-            v-if="$perms('indicatorscores_delete')"
-            :disabled="!selectRows.length > 0"
-            icon="el-icon-delete"
-            type="danger"
-            @click="handleDelete"
-        > 批量删除 </el-button>
+<!--        <el-button-->
+<!--            v-if="$perms('indicatorscores_delete')"-->
+<!--            :disabled="!selectRows.length > 0"-->
+<!--            icon="el-icon-delete"-->
+<!--            type="danger"-->
+<!--            @click="handleDelete"-->
+<!--        > 批量删除 </el-button>-->
 
       </vab-query-form-left-panel>
       <vab-query-form-right-panel :span="14">
@@ -138,9 +138,9 @@
             type="text"
             @click="handleUpdate(scope.row)"
           > 编辑 </el-button>
-          
+
           <el-divider direction="vertical"></el-divider>
-          
+
           <el-button
             v-if="$perms('indicatorscores_delete')"
             type="text"
@@ -189,11 +189,11 @@
         moreQueryFlag: false,
         queryForm: {
           pageNo: 1,
-          pageSize: 10,
-          choosenDate_BEGIN: "",
-          choosenDate_END: "",
+          pageSize: 100000,
+          choosenDate_BEGIN: formateDate(new Date(new Date().toLocaleDateString()), 'yyyy-MM-dd hh:mm:ss'),
+          choosenDate_END: formateDate(new Date(new Date(new Date().toLocaleDateString()).getTime()+86400000), 'yyyy-MM-dd hh:mm:ss'),
         },
-        choosenDateDatePicker: [],
+        choosenDateDatePicker: [new Date(new Date().toLocaleDateString()),new Date(new Date(new Date().toLocaleDateString()).getTime()+86400000)],
         dict:{},
         pickerOptions: {
           shortcuts: [{
@@ -289,14 +289,18 @@
       },
       queryData() {
         if(isNotNull(this.choosenDateDatePicker) && this.choosenDateDatePicker.length === 2){
+          let sDt = new Date(this.choosenDateDatePicker[0].toLocaleDateString()).getTime();
+          let eDt = new Date(this.choosenDateDatePicker[1].toLocaleDateString()).getTime()+86400000;
           this.queryForm.choosenDate_BEGIN =
-                  this.choosenDateDatePicker.length === 0 ? "" : formateDate(this.choosenDateDatePicker[0], 'yyyy-MM-dd hh:mm:ss');
+                  this.choosenDateDatePicker.length === 0 ? "" : formateDate(sDt, 'yyyy-MM-dd hh:mm:ss');
           this.queryForm.choosenDate_END =
-                  this.choosenDateDatePicker.length === 0 ? "" : formateDate(this.choosenDateDatePicker[1], 'yyyy-MM-dd hh:mm:ss');
+                  this.choosenDateDatePicker.length === 0 ? "" : formateDate(eDt, 'yyyy-MM-dd hh:mm:ss');
         }else{
-          this.queryForm.choosenDate_BEGIN = "";
-          this.queryForm.choosenDate_END = "";
-        }        
+          let sDt = new Date(new Date().toLocaleDateString()).getTime();
+          let eDt = new Date(new Date().toLocaleDateString()).getTime()+86400000;
+          this.queryForm.choosenDate_BEGIN = formateDate(sDt, 'yyyy-MM-dd hh:mm:ss');
+          this.queryForm.choosenDate_END = formateDate(eDt, 'yyyy-MM-dd hh:mm:ss');
+        }
 
         this.queryForm.pageNo = 1;
         this.fetchData();

@@ -15,12 +15,14 @@
  */
 package org.opsli.modulars.indicatorscores.web;
 
-import java.util.Optional;
+import java.util.*;
+
 import cn.hutool.core.convert.Convert;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.opsli.api.base.result.ResultWrapper;
+import org.opsli.api.wrapper.indicatorscores.IndicatorScore;
 import org.opsli.common.annotation.ApiRestController;
 import org.opsli.core.base.controller.BaseRestController;
 import org.opsli.core.persistence.Page;
@@ -50,6 +52,9 @@ import org.opsli.api.web.indicatorscores.ScoreRestApi;
 public class ScoreRestController extends BaseRestController<Score, ScoreModel, IScoreService>
     implements ScoreRestApi {
 
+    List<IndicatorScore> indicatorScoreList;
+    String choosenDateBegin = "";
+    String choosenDateEnd = "";
     /**
      * 选股评分 查一条
      * @param model 模型
@@ -77,13 +82,60 @@ public class ScoreRestController extends BaseRestController<Score, ScoreModel, I
     @PreAuthorize("hasAuthority('indicatorscores_select')")
     @Override
     public ResultWrapper<?> findPage(Integer pageNo, Integer pageSize, HttpServletRequest request) {
+        Set<Map.Entry<String, String[]>> entrySet = request.getParameterMap().entrySet();
+        if(request.getParameterMap().get("ChoosenDate_BEGIN") != null && request.getParameterMap().get("ChoosenDate_End") != null){
+            String[] _choosenDateBegin = request.getParameterMap().get("ChoosenDate_BEGIN");
+            String[] _choosenDateEnd = request.getParameterMap().get("ChoosenDate_END");
 
-        QueryBuilder<Score> queryBuilder = new WebQueryBuilder<>(IService.getEntityClass(), request.getParameterMap());
-        Page<Score, ScoreModel> page = new Page<>(pageNo, pageSize);
-        page.setQueryWrapper(queryBuilder.build());
-        page = IService.findPage(page);
+            if(_choosenDateBegin.length>0&&choosenDateBegin.equals(_choosenDateBegin[0])&& _choosenDateEnd.length>0&&choosenDateEnd.equals(_choosenDateEnd[0])){
+                Page.PageData pageData = new Page.PageData();
+                pageData.setTotal((long)indicatorScoreList.size());
+                pageData.setRows(indicatorScoreList);
 
-        return ResultWrapper.getSuccessResultWrapper(page.getPageData());
+                return ResultWrapper.getSuccessResultWrapper(pageData);
+            }
+        }else {
+            QueryBuilder<Score> queryBuilder = new WebQueryBuilder<>(IService.getEntityClass(), request.getParameterMap());
+            Page<Score, ScoreModel> page = new Page<>(pageNo, pageSize);
+            page.setQueryWrapper(queryBuilder.build());
+            page = IService.findPage(page);
+
+            Map<Long, List<ScoreModel>> map = new LinkedHashMap<>();
+            for (ScoreModel sm : page.getList()) {
+                if (map.get(sm.getChoosenStockId()) == null) {
+                    map.put(sm.getChoosenStockId(), new ArrayList<>());
+                } else {
+                    map.get(sm.getChoosenStockId()).add(sm);
+                }
+            }
+
+            indicatorScoreList = new ArrayList<>();
+            for (Long datecount:map.keySet()){
+                IndicatorScore is = new IndicatorScore();
+                is.setScoreList(new ArrayList<>());
+                long totalScores = 0L;
+                for(ScoreModel sm:map.get(datecount)) {
+                    is.setDateCount(sm.getDateCount());
+                    is.setIndicatorId(sm.getIndicatorId());
+                    is.setValue(sm.getValue());
+                    is.setNote(sm.getNote());
+                    is.setChoosenDate(sm.getChoosenDate());
+                    is.setChoosenStockId(sm.getChoosenStockId());
+                    is.getScoreList().add(sm);
+                    totalScores += sm.getValue().longValue();
+                }
+                is.setTotalScores(totalScores);
+                indicatorScoreList.add(is);
+            }
+
+            Page.PageData pageData = new Page.PageData();
+            pageData.setTotal((long)indicatorScoreList.size());
+            pageData.setRows(indicatorScoreList);
+
+            return ResultWrapper.getSuccessResultWrapper(pageData);
+        }
+
+        return null;
     }
 
     /**
