@@ -18,6 +18,7 @@ package org.opsli.modulars.indicatorscores.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.opsli.modulars.indicatorscores.entity.Score;
 
 /**
@@ -28,5 +29,7 @@ import org.opsli.modulars.indicatorscores.entity.Score;
  */
 @Mapper
 public interface ScoreMapper extends BaseMapper<Score> {
-
+//    @Select("select count(user_id) from " +
+//            "(select DISTINCT a.user_id from evaluate_result a left join user b on a.user_id = b.id where scene_id = #{sceneId} and b.department like CONCAT('%',#{departmentId},'%')) a")
+//    int countTakePracticeEmployee(@Param("sceneId") long sceneId, @Param("departmentId") long departmentId);
 }

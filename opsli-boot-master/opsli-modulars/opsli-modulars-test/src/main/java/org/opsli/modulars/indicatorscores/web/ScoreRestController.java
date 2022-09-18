@@ -50,7 +50,6 @@ import org.opsli.api.web.indicatorscores.ScoreRestApi;
 public class ScoreRestController extends BaseRestController<Score, ScoreModel, IScoreService>
     implements ScoreRestApi {
 
-
     /**
      * 选股评分 查一条
      * @param model 模型

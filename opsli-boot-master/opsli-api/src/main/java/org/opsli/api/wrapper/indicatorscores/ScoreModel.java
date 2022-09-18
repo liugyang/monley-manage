@@ -15,20 +15,20 @@
  */
 package org.opsli.api.wrapper.indicatorscores;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.opsli.api.base.warpper.ApiWrapper;
 import org.opsli.common.annotation.validator.Validator;
 import org.opsli.common.annotation.validator.ValidatorLenMax;
-import org.opsli.common.annotation.validator.ValidatorLenMin;
 import org.opsli.common.enums.ValidatorType;
 import org.opsli.plugins.excel.annotation.ExcelInfo;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
 * 选股评分 Model
@@ -45,7 +45,7 @@ public class ScoreModel extends ApiWrapper {
     @ExcelProperty(value = "选股ID", order = 1)
     @ExcelInfo
     @Validator({
-        ValidatorType.IS_NOT_NULL, 
+        ValidatorType.IS_NOT_NULL,
         ValidatorType.IS_INTEGER
     })
     @ValidatorLenMax(19)
@@ -56,7 +56,7 @@ public class ScoreModel extends ApiWrapper {
     @ExcelProperty(value = "指标ID", order = 2)
     @ExcelInfo
     @Validator({
-        ValidatorType.IS_NOT_NULL, 
+        ValidatorType.IS_NOT_NULL,
         ValidatorType.IS_INTEGER
     })
     @ValidatorLenMax(19)

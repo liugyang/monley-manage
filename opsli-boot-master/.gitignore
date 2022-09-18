@@ -35,3 +35,4 @@ build/
 /git-push.sh
 /app-log/
 /app-opsli-log/
+/yarn.lock
