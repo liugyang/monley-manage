@@ -94,12 +94,22 @@
               prop="choosenStockId"
               label="选股ID"
       ></el-table-column>
-
       <el-table-column
-              show-overflow-tooltip
-              prop="indicatorId"
-              label="指标ID"
-      ></el-table-column>
+        v-for="col in extCol"
+        show-overflow-tooltip
+        :key="col.indicatorId"
+        :label="col.note"
+      >
+        {{this.tableData.get(col.choosenStockId)(col.indicatorId)}}
+<!--        {{tableData[col.choosenStockId][col.indicatorId]}}-->
+      </el-table-column>
+<!--      <template v-for="indicator in scoreList">-->
+<!--        <el-table-column-->
+<!--                show-overflow-tooltip-->
+<!--                prop="indicator.value"-->
+<!--                label="indicator.indicatorId"-->
+<!--        ></el-table-column>-->
+<!--      </template>-->
 
       <el-table-column
               show-overflow-tooltip
@@ -109,22 +119,9 @@
 
       <el-table-column
               show-overflow-tooltip
-              prop="dateCount"
-              label="时间计数"
-      ></el-table-column>
-
-      <el-table-column
-              show-overflow-tooltip
               prop="value"
               label="值"
       ></el-table-column>
-
-      <el-table-column
-              show-overflow-tooltip
-              prop="note"
-              label="说明"
-      ></el-table-column>
-
 
       <el-table-column
         show-overflow-tooltip
@@ -181,6 +178,8 @@
     data() {
       return {
         list: null,
+        tableData: [],
+        extCol:[],
         listLoading: true,
         layout: "total, prev, pager, next, sizes, jumper",
         total: 0,
@@ -189,7 +188,7 @@
         moreQueryFlag: false,
         queryForm: {
           pageNo: 1,
-          pageSize: 100000,
+          pageSize: 10,
           choosenDate_BEGIN: formateDate(new Date(new Date().toLocaleDateString()), 'yyyy-MM-dd hh:mm:ss'),
           choosenDate_END: formateDate(new Date(new Date(new Date().toLocaleDateString()).getTime()+86400000), 'yyyy-MM-dd hh:mm:ss'),
         },
@@ -289,8 +288,8 @@
       },
       queryData() {
         if(isNotNull(this.choosenDateDatePicker) && this.choosenDateDatePicker.length === 2){
-          let sDt = new Date(this.choosenDateDatePicker[0].toLocaleDateString()).getTime();
-          let eDt = new Date(this.choosenDateDatePicker[1].toLocaleDateString()).getTime()+86400000;
+          let sDt = new Date(this.choosenDateDatePicker[0].toLocaleDateString());
+          let eDt = new Date(new Date(this.choosenDateDatePicker[1].toLocaleDateString()).getTime()+86400000);
           this.queryForm.choosenDate_BEGIN =
                   this.choosenDateDatePicker.length === 0 ? "" : formateDate(sDt, 'yyyy-MM-dd hh:mm:ss');
           this.queryForm.choosenDate_END =
@@ -311,6 +310,18 @@
         if(isNotNull(data)){
           this.list = data.rows;
           this.total = data.total;
+
+          if(this.list.length > 0) {
+            this.extCol = this.list[0].scoreList;
+            this.tableData = new Map();
+            for (let i=0;i<this.list.length;i++) {
+              this.tableData.set(this.list[i].choosenStockId, new Map());
+              for(let j=0;j<this.list[i].scoreList.length;j++) {
+                this.tableData.get(this.list[i].choosenStockId).set(this.list[i].scoreList[j].id,this.list[i].scoreList[j].value);
+              }
+            }
+          }
+          console.log(this.tableData)
         }
         setTimeout(() => {
             this.listLoading = false;

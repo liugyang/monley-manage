@@ -28,6 +28,9 @@ import org.opsli.core.base.controller.BaseRestController;
 import org.opsli.core.persistence.Page;
 import org.opsli.core.persistence.querybuilder.QueryBuilder;
 import org.opsli.core.persistence.querybuilder.WebQueryBuilder;
+import org.opsli.modulars.indicatorscores.entity.Indicator;
+import org.opsli.modulars.indicatorscores.mapper.ScoreMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,8 +56,13 @@ public class ScoreRestController extends BaseRestController<Score, ScoreModel, I
     implements ScoreRestApi {
 
     List<IndicatorScore> indicatorScoreList;
+    int PAGE_SIZE = 100000;
     String choosenDateBegin = "";
     String choosenDateEnd = "";
+    Map<Long, Indicator> indicatorsMap;
+
+    @Autowired
+    private ScoreMapper scoreMapper;
     /**
      * 选股评分 查一条
      * @param model 模型
@@ -82,60 +90,96 @@ public class ScoreRestController extends BaseRestController<Score, ScoreModel, I
     @PreAuthorize("hasAuthority('indicatorscores_select')")
     @Override
     public ResultWrapper<?> findPage(Integer pageNo, Integer pageSize, HttpServletRequest request) {
-        Set<Map.Entry<String, String[]>> entrySet = request.getParameterMap().entrySet();
-        if(request.getParameterMap().get("ChoosenDate_BEGIN") != null && request.getParameterMap().get("ChoosenDate_End") != null){
-            String[] _choosenDateBegin = request.getParameterMap().get("ChoosenDate_BEGIN");
-            String[] _choosenDateEnd = request.getParameterMap().get("ChoosenDate_END");
+        if(indicatorsMap == null){
+            indicatorsMap = new HashMap<>();
+            List<Indicator> indicators = scoreMapper.getIndicators();
+            for(Indicator in: indicators){
+                indicatorsMap.put(in.getId(),in);
+            }
+        }
+        if(request.getParameterMap().get("choosenDate_BEGIN") != null && request.getParameterMap().get("choosenDate_END") != null){
+            String[] _choosenDateBegin = request.getParameterMap().get("choosenDate_BEGIN");
+            String[] _choosenDateEnd = request.getParameterMap().get("choosenDate_END");
 
             if(_choosenDateBegin.length>0&&choosenDateBegin.equals(_choosenDateBegin[0])&& _choosenDateEnd.length>0&&choosenDateEnd.equals(_choosenDateEnd[0])){
                 Page.PageData pageData = new Page.PageData();
                 pageData.setTotal((long)indicatorScoreList.size());
-                pageData.setRows(indicatorScoreList);
+                if(indicatorScoreList.size()>0) {
+                    if((pageNo - 1) * pageSize >indicatorScoreList.size()){
+                        pageData.setRows(new ArrayList<>());
+                    }else if(pageNo * pageSize > indicatorScoreList.size()){
+                        pageData.setRows(indicatorScoreList.subList((pageNo - 1) * pageSize,indicatorScoreList.size()));
+                    }else {
+                        pageData.setRows(indicatorScoreList.subList((pageNo - 1) * pageSize, pageNo * pageSize));
+                    }
+                }else{
+                    pageData.setRows(indicatorScoreList);
+                }
 
                 return ResultWrapper.getSuccessResultWrapper(pageData);
             }
-        }else {
-            QueryBuilder<Score> queryBuilder = new WebQueryBuilder<>(IService.getEntityClass(), request.getParameterMap());
-            Page<Score, ScoreModel> page = new Page<>(pageNo, pageSize);
-            page.setQueryWrapper(queryBuilder.build());
-            page = IService.findPage(page);
-
-            Map<Long, List<ScoreModel>> map = new LinkedHashMap<>();
-            for (ScoreModel sm : page.getList()) {
-                if (map.get(sm.getChoosenStockId()) == null) {
-                    map.put(sm.getChoosenStockId(), new ArrayList<>());
-                } else {
-                    map.get(sm.getChoosenStockId()).add(sm);
-                }
-            }
-
-            indicatorScoreList = new ArrayList<>();
-            for (Long datecount:map.keySet()){
-                IndicatorScore is = new IndicatorScore();
-                is.setScoreList(new ArrayList<>());
-                long totalScores = 0L;
-                for(ScoreModel sm:map.get(datecount)) {
-                    is.setDateCount(sm.getDateCount());
-                    is.setIndicatorId(sm.getIndicatorId());
-                    is.setValue(sm.getValue());
-                    is.setNote(sm.getNote());
-                    is.setChoosenDate(sm.getChoosenDate());
-                    is.setChoosenStockId(sm.getChoosenStockId());
-                    is.getScoreList().add(sm);
-                    totalScores += sm.getValue().longValue();
-                }
-                is.setTotalScores(totalScores);
-                indicatorScoreList.add(is);
-            }
-
-            Page.PageData pageData = new Page.PageData();
-            pageData.setTotal((long)indicatorScoreList.size());
-            pageData.setRows(indicatorScoreList);
-
-            return ResultWrapper.getSuccessResultWrapper(pageData);
         }
 
-        return null;
+        if (request.getParameterMap().get("choosenDate_BEGIN") != null) {
+            choosenDateBegin = request.getParameterMap().get("choosenDate_BEGIN")[0];
+        }
+        if (request.getParameterMap().get("choosenDate_END") != null) {
+            choosenDateEnd = request.getParameterMap().get("choosenDate_END")[0];
+        }
+
+        QueryBuilder<Score> queryBuilder = new WebQueryBuilder<>(IService.getEntityClass(), request.getParameterMap());
+        Page<Score, ScoreModel> page = new Page<>(1, PAGE_SIZE);
+        page.setQueryWrapper(queryBuilder.build());
+        page = IService.findPage(page);
+
+        Map<Long, List<ScoreModel>> map = new LinkedHashMap<>();
+        for (ScoreModel sm : page.getList()) {
+            if (map.get(sm.getChoosenStockId()) == null) {
+                map.put(sm.getChoosenStockId(), new ArrayList<>());
+            } else {
+                map.get(sm.getChoosenStockId()).add(sm);
+            }
+        }
+
+        indicatorScoreList = new ArrayList<>();
+
+        for (Long datecount:map.keySet()){
+            IndicatorScore is = new IndicatorScore();
+            is.setScoreList(new ArrayList<>());
+            long totalScores = 0L;
+            for(ScoreModel sm:map.get(datecount)) {
+                sm.setNote(sm.getNote()==null?indicatorsMap.get(sm.getIndicatorId()).getName():sm.getNote());
+
+                is.setDateCount(sm.getDateCount());
+                is.setIndicatorId(sm.getIndicatorId());
+                is.setValue(sm.getValue());
+                is.setNote(sm.getNote());
+                is.setChoosenDate(sm.getChoosenDate());
+                is.setChoosenStockId(sm.getChoosenStockId());
+                is.getScoreList().add(sm);
+
+                totalScores += sm.getValue().longValue();
+            }
+            is.setTotalScores(totalScores);
+            indicatorScoreList.add(is);
+        }
+
+        Page.PageData pageData = new Page.PageData();
+        pageData.setTotal((long)indicatorScoreList.size());
+        if(indicatorScoreList.size()>0) {
+            if((pageNo - 1) * pageSize >indicatorScoreList.size()){
+                pageData.setRows(new ArrayList<>());
+            }else if(pageNo * pageSize > indicatorScoreList.size()){
+                pageData.setRows(indicatorScoreList.subList((pageNo - 1) * pageSize,indicatorScoreList.size()));
+            }else {
+                pageData.setRows(indicatorScoreList.subList((pageNo - 1) * pageSize, pageNo * pageSize));
+            }
+        }else{
+            pageData.setRows(indicatorScoreList);
+        }
+
+
+        return ResultWrapper.getSuccessResultWrapper(pageData);
     }
 
     /**

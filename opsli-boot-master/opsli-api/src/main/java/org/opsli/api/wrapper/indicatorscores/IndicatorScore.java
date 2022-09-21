@@ -39,7 +39,7 @@ public class IndicatorScore extends ApiWrapper {
             ValidatorType.IS_NOT_NULL,
             ValidatorType.IS_INTEGER
     })
-    private List<ScoreModel> ScoreList;
+    private List<ScoreModel> scoreList;
 
     /** 日期 */
     @ApiModelProperty(value = "日期")

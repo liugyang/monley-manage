@@ -16,10 +16,10 @@
 package org.opsli.modulars.indicatorscores.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import org.opsli.modulars.indicatorscores.entity.Indicator;
 import org.opsli.modulars.indicatorscores.entity.Score;
+import java.util.List;
 
 /**
  * 选股评分 Mapper
@@ -29,7 +29,9 @@ import org.opsli.modulars.indicatorscores.entity.Score;
  */
 @Mapper
 public interface ScoreMapper extends BaseMapper<Score> {
-//    @Select("select count(user_id) from " +
-//            "(select DISTINCT a.user_id from evaluate_result a left join user b on a.user_id = b.id where scene_id = #{sceneId} and b.department like CONCAT('%',#{departmentId},'%')) a")
-//    int countTakePracticeEmployee(@Param("sceneId") long sceneId, @Param("departmentId") long departmentId);
+    @Results({@Result(column="id",property="id"),@Result(column="sn",property="sn"),
+            @Result(column="name",property="name"),@Result(column="is_calc",property="isCalc"),
+            @Result(column="is_value",property="isValue"),@Result(column="weight",property="weight")})
+    @Select("select id,sn,name,is_calc,is_value,weight from indicator")
+    List<Indicator> getIndicators();
 }
